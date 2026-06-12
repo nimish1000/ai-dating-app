@@ -31,12 +31,7 @@ const register = async (req, res) => {
     try {
         // ── Step 1: Read what the user sent ─────────────────
         // req.body contains the JSON they sent
-        const { name, email, password, birth_date, gender, phone } = req.body;
-        const formattedPhone = normalizePhone(phone);
-
-        if (!formattedPhone) {
-            return res.status(400).json({ error: 'Valid 10 digit phone number is required.' });
-        }
+        const { name, email, password, birth_date, gender } = req.body;
 
         // ── Step 2: Check if email already exists ───────────
         // We don't want two accounts with the same email
@@ -54,16 +49,6 @@ const register = async (req, res) => {
             });
         }
 
-        const existingPhone = await query(
-            'SELECT id FROM users WHERE phone = $1',
-            [formattedPhone]
-        );
-
-        if (existingPhone.rows.length > 0) {
-            return res.status(409).json({
-                error: 'This phone number is already registered.'
-            });
-        }
 
         // ── Step 3: Hash the password ───────────────────────
         // NEVER store the real password. Always hash it first.
@@ -97,10 +82,10 @@ const register = async (req, res) => {
         // ── Step 5: Save the user to the database ───────────
         const result = await query(
             `INSERT INTO users
-         (name, email, password_hash, birth_date, age, gender, phone)
+         (name, email, password_hash, birth_date, age, gender)
        VALUES
-         ($1, $2, $3, $4, $5, $6, $7)
-       RETURNING id, name, email, age, gender, phone, is_phone_verified, created_at`,
+         ($1, $2, $3, $4, $5, $6)
+       RETURNING id, name, email, age, gender, is_phone_verified, created_at`,
             [
                 name.trim(),
                 email.toLowerCase(),
@@ -108,7 +93,6 @@ const register = async (req, res) => {
                 birth_date || null,
                 age,
                 gender || null,
-                formattedPhone,
             ]
         );
 
@@ -146,33 +130,28 @@ const register = async (req, res) => {
             { expiresIn: '7d' }
         );
 
-        // ── Step 7: Registration number pe OTP SMS bhejo ───
+        // ── Step 7: Registration email pe OTP bhejo ───
         let otpSent = false;
         let otpError = null;
         try {
-            await sendOTP(formattedPhone);
+            await sendOTP(email.toLowerCase());
             otpSent = true;
         } catch (otpErr) {
             console.error('Register OTP error:', otpErr.message);
-            otpError = otpErr.code === 'SAME_AS_TWILIO_NUMBER'
-                ? 'Yeh number Twilio sender number hai. Koi aur number use karo.'
-                : otpErr.code === 21608
-                    ? 'Trial account mein sirf verified numbers pe SMS ja sakta hai.'
-                    : 'OTP SMS nahi gaya. Phone verify screen se dobara try karo.';
+            otpError = 'OTP email nahi gaya. Verification screen se retry karein.';
         }
 
         // ── Step 8: Send back the response ──────────────────
         return res.status(201).json({
             message: otpSent
-                ? 'Account created! OTP SMS bhej diya gaya.'
-                : 'Account created! OTP SMS nahi gaya — verify screen se dobara bhijwao.',
+                ? 'Account created! Verification OTP email pe bhej diya gaya.'
+                : 'Account created! OTP send fail hua. Verification screen se dobara try karein.',
             user: {
                 id: newUser.id,
                 name: newUser.name,
                 email: newUser.email,
                 age: newUser.age,
                 photo: photoUrl,
-                phone: newUser.phone,
                 is_phone_verified: newUser.is_phone_verified ?? false,
             },
             token,

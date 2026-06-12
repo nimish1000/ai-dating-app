@@ -33,7 +33,7 @@ const { query } = require('../config/database');
 
 const validateRegister = (req, res, next) => {
     // req.body contains whatever the user sent
-    const { name, email, password, phone } = req.body;
+    const { name, email, password } = req.body;
 
     // Check: name is required
     if (!name || name.trim() === '') {
@@ -56,11 +56,6 @@ const validateRegister = (req, res, next) => {
     }
     if (password.length < 8) {
         return res.status(400).json({ error: 'Password must be at least 8 characters.' });
-    }
-
-    // Check: phone is required (10 digit Indian number)
-    if (!phone || String(phone).replace(/\D/g, '').slice(-10).length !== 10) {
-        return res.status(400).json({ error: 'Valid 10 digit phone number is required.' });
     }
 
     // Check: profile photo is required
