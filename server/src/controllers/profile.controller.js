@@ -41,10 +41,23 @@ const buildPhotoUrl = (req, filename) => {
 
 const normalizePhotoUrl = (req, url) => {
     if (!url) return url;
-    if (url.startsWith('/uploads/')) {
-        return `${req.protocol}://${req.get('host')}${url}`;
+    const trimmedUrl = url.trim();
+    const host = req.get('host');
+    const base = `${req.protocol}://${host}`;
+
+    if (trimmedUrl.startsWith('/uploads/')) {
+        return `${base}${trimmedUrl}`;
     }
-    return url.replace(/^(https?:\/\/)(localhost|127\.0\.0\.1)(:\d+)?/, `${req.protocol}://${req.get('host')}`);
+    if (trimmedUrl.startsWith('uploads/')) {
+        return `${base}/${trimmedUrl}`;
+    }
+    if (/^https?:\/\//i.test(trimmedUrl)) {
+        return trimmedUrl.replace(
+            /^(https?:\/\/)(localhost|127\.0\.0\.1)(:\d+)?/i,
+            base
+        );
+    }
+    return `${base}/${trimmedUrl.replace(/^\/+/, '')}`;
 };
 
 // ── 1. MERA PROFILE DIKHAO ────────────────────────────────

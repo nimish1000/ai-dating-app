@@ -24,6 +24,7 @@ const chatRoutes = require('./routes/chat.routes');
 const profileRoutes = require('./routes/profile.routes');
 
 const app = express();
+app.set('trust proxy', true);
 const httpServer = http.createServer(app);
 
 // ── MIDDLEWARE ────────────────────────────────────────────
