@@ -16,7 +16,6 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { query } = require('../config/database');
-const { sendOTP, normalizePhone } = require('../services/otp.service');
 
 const buildPhotoUrl = (req, filename) => {
     return `${req.protocol}://${req.get('host')}/uploads/${filename}`;
@@ -130,22 +129,9 @@ const register = async (req, res) => {
             { expiresIn: '7d' }
         );
 
-        // ── Step 7: Registration email pe OTP bhejo ───
-        let otpSent = false;
-        let otpError = null;
-        try {
-            await sendOTP(email.toLowerCase());
-            otpSent = true;
-        } catch (otpErr) {
-            console.error('Register OTP error:', otpErr.message);
-            otpError = 'OTP email nahi gaya. Verification screen se retry karein.';
-        }
-
-        // ── Step 8: Send back the response ──────────────────
+        // ── Step 7: Send back the response (no OTP flow) ───
         return res.status(201).json({
-            message: otpSent
-                ? 'Account created! Verification OTP email pe bhej diya gaya.'
-                : 'Account created! OTP send fail hua. Verification screen se dobara try karein.',
+            message: 'Account created!',
             user: {
                 id: newUser.id,
                 name: newUser.name,
@@ -155,8 +141,6 @@ const register = async (req, res) => {
                 is_phone_verified: newUser.is_phone_verified ?? false,
             },
             token,
-            otp_sent: otpSent,
-            otp_error: otpError,
         });
 
     } catch (err) {

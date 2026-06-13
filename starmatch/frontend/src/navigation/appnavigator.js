@@ -10,7 +10,7 @@ import { colors } from '../theme';
 
 import LoginScreen     from '../screens/Loginscreen';
 import RegisterScreen  from '../screens/Registerscreen';
-import PhoneAuthScreen from '../screens/PhoneAuthScreen';
+// PhoneAuthScreen removed — OTP flow deprecated
 import SwipeScreen     from '../screens/Swipescreen';
 import ProfileScreen   from '../screens/ProfileScreen';
 
@@ -72,8 +72,7 @@ const MainTabs = () => (
 );
 
 const AppNavigator = () => {
-  const { isLoggedIn, isLoading, user, isRegistering } = useAuth();
-  const needsPhoneVerify = isLoggedIn && isRegistering && user?.is_phone_verified !== true;
+  const { isLoggedIn, isLoading } = useAuth();
 
   if (isLoading) {
     return (
@@ -86,9 +85,7 @@ const AppNavigator = () => {
   return (
     <NavigationContainer theme={navTheme}>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        {needsPhoneVerify ? (
-          <Stack.Screen name="PhoneAuth" component={PhoneAuthScreen} />
-        ) : isLoggedIn ? (
+        {isLoggedIn ? (
           <Stack.Screen name="MainTabs" component={MainTabs} />
         ) : (
           <>
