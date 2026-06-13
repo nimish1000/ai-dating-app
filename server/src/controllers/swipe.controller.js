@@ -105,19 +105,10 @@ const getDiscovery = async (req, res) => {
         AND u.is_active = true                     -- only active accounts
         AND u.id NOT IN (SELECT swiped_id FROM already_swiped)
                                                    -- not already swiped
-        AND (
-          $2 = 'everyone'                          -- I want to see everyone
-          OR u.gender = $2                         -- or only matching gender
-        )
-        AND u.age BETWEEN $3 AND $4                -- within my age range
       ORDER BY u.created_at DESC                   -- newest users first
-      LIMIT 20
       `,
             [
                 me.id,                      // $1 — my id
-                me.looking_for || 'everyone', // $2 — gender preference
-                me.min_age_pref || 18,        // $3 — min age
-                me.max_age_pref || 50,        // $4 — max age
             ]
         );
 
