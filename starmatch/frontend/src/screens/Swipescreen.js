@@ -11,6 +11,7 @@ import BrandMark from '../components/BrandMark';
 import { colors, spacing, radius, shadows } from '../theme';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
+const SCREEN_HEIGHT = Dimensions.get('window').height;
 const SWIPE_THRESHOLD = SCREEN_WIDTH * 0.25;
 
 const SwipeScreen = () => {
@@ -368,8 +369,8 @@ const styles = StyleSheet.create({
   },
   card: {
     position:        'absolute',
-    width:           SCREEN_WIDTH - 16,
-    height:          '95%',
+    width:           SCREEN_WIDTH - 24,
+    height:          SCREEN_HEIGHT * 0.85,
     borderRadius:    radius.xl,
     backgroundColor: colors.card,
     ...shadows.card,
@@ -381,6 +382,8 @@ const styles = StyleSheet.create({
     flex:         1,
     borderRadius: radius.xl,
     overflow:     'hidden',
+    backgroundColor: 'transparent',
+    justifyContent: 'flex-start',
   },
   photo: {
     width:  '100%',
