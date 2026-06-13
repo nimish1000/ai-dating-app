@@ -386,6 +386,8 @@ const styles = StyleSheet.create({
     width:  '100%',
     height: '100%',
     position: 'absolute',
+    top: 0,
+    left: 0,
   },
   photoPlaceholder: {
     width:           '100%',
@@ -399,8 +401,8 @@ const styles = StyleSheet.create({
     bottom:     0,
     left:       0,
     right:      0,
-    height:     '45%',
-    backgroundColor: 'rgba(10, 10, 12, 0.75)',
+    height:     '50%',
+    backgroundColor: 'rgba(10, 10, 12, 0.85)',
   },
   cardInfo: {
     position: 'absolute',
