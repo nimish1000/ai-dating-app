@@ -8,7 +8,7 @@ import { Platform } from 'react-native';
 
 // If you run on a physical device, replace with your machine IP, e.g.:
 // const BASE_URL = 'http://192.168.1.42:3001'
-const BASE_URL='https://gallant-vibrancy-production-7eef.up.railway.app'
+const BASE_URL='https://gallant-vibrancy-production-7eef.up.railway.app/api'
 //AXIOS INSTANCE BANAO
 const api = axios.create({
     baseURL: BASE_URL,
