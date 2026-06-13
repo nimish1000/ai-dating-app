@@ -370,7 +370,7 @@ const styles = StyleSheet.create({
   card: {
     position:        'absolute',
     width:           SCREEN_WIDTH - 24,
-    height:          SCREEN_HEIGHT * 0.85,
+    height:          SCREEN_HEIGHT * 0.92,
     borderRadius:    radius.xl,
     backgroundColor: colors.card,
     ...shadows.card,
@@ -383,7 +383,7 @@ const styles = StyleSheet.create({
     borderRadius: radius.xl,
     overflow:     'hidden',
     backgroundColor: 'transparent',
-    justifyContent: 'flex-start',
+    justifyContent: 'space-between',
   },
   photo: {
     width:  '100%',
@@ -404,7 +404,7 @@ const styles = StyleSheet.create({
     bottom:     0,
     left:       0,
     right:      0,
-    height:     '50%',
+    height:     '30%',
     backgroundColor: 'rgba(10, 10, 12, 0.85)',
   },
   cardInfo: {
