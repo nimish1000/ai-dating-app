@@ -85,10 +85,6 @@ const updateUser= async(updatedData)=>{
     const newUser= {...user,...updatedData};
     await AsyncStorage.setItem('user',JSON.stringify(newUser));
     setUser(newUser);
-    if (updatedData.is_phone_verified === true) {
-        await AsyncStorage.removeItem('is_registering');
-        setIsRegistering(false);
-    }
 };
 
  return(

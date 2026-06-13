@@ -80,7 +80,6 @@ const RegisterScreen = ({ navigation }) => {
       const { token, user, otp_sent, otp_error } = response.data;
       await login(token, {
         ...user,
-        is_phone_verified: user.is_phone_verified ?? false,
       }, true);
 
       if (otp_sent) {

@@ -84,7 +84,7 @@ const register = async (req, res) => {
          (name, email, password_hash, birth_date, age, gender)
        VALUES
          ($1, $2, $3, $4, $5, $6)
-       RETURNING id, name, email, age, gender, is_phone_verified, created_at`,
+       RETURNING id, name, email, age, gender, created_at`,
             [
                 name.trim(),
                 email.toLowerCase(),
@@ -138,7 +138,6 @@ const register = async (req, res) => {
                 email: newUser.email,
                 age: newUser.age,
                 photo: photoUrl,
-                is_phone_verified: newUser.is_phone_verified ?? false,
             },
             token,
         });
@@ -165,7 +164,7 @@ const login = async (req, res) => {
 
         // ── Step 2: Find the user by email ──────────────────
         const result = await query(
-            `SELECT id, name, email, password_hash, is_active, is_phone_verified
+            `SELECT id, name, email, password_hash, is_active
        FROM users
        WHERE email = $1`,
             [email.toLowerCase()]
@@ -211,7 +210,6 @@ const login = async (req, res) => {
                 id: user.id,
                 name: user.name,
                 email: user.email,
-                is_phone_verified: user.is_phone_verified ?? false,
             },
             token,
         });

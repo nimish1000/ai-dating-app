@@ -34,7 +34,6 @@ const LoginScreen = ({ navigation }) => {
       const { token, user } = response.data;
       await login(token, {
         ...user,
-        is_phone_verified: user.is_phone_verified ?? false,
       });
     } catch (err) {
       const message = err.response?.data?.error || 'Login nahi hua. Try again.';
